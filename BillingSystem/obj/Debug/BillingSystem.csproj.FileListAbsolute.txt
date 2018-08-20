@@ -1,0 +1,53 @@
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\obj\Debug\BillingSystem.Resources.Procedures.resources
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\obj\Debug\BillingSystem.csproj.GenerateResource.Cache
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\BillingSystem.dll
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\BillingSystem.pdb
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\Microsoft.Web.Infrastructure.dll
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\Newtonsoft.Json.dll
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\Resources.Procedures.Designer.cs.dll
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.Helpers.dll
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.Mvc.dll
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.Razor.dll
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.WebPages.Deployment.dll
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.WebPages.dll
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.WebPages.Razor.dll
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\Newtonsoft.Json.xml
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.Helpers.xml
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.Mvc.xml
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.Razor.xml
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.WebPages.xml
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.WebPages.Deployment.xml
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\bin\System.Web.WebPages.Razor.xml
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\obj\Debug\BillingSystem.dll
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\obj\Debug\BillingSystem.pdb
+E:\free Elancing\Micro Computing & Technology Services\BillingSystem\BillingSystem\obj\Debug\BillingSystem.csprojResolveAssemblyReference.cache
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\BillingSystem.dll.config
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\BillingSystem.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\BillingSystem.pdb
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\Microsoft.Web.Infrastructure.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\Newtonsoft.Json.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Net.Http.Formatting.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.Helpers.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.Http.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.Http.WebHost.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.Mvc.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.Razor.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.WebPages.Deployment.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.WebPages.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.WebPages.Razor.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\Newtonsoft.Json.xml
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Net.Http.Formatting.xml
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.Helpers.xml
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.Http.xml
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.Http.WebHost.xml
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.Mvc.xml
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.Razor.xml
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.WebPages.xml
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.WebPages.Deployment.xml
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\bin\System.Web.WebPages.Razor.xml
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\obj\Debug\BillingSystem.csprojResolveAssemblyReference.cache
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\obj\Debug\BillingSystem.Resources.Procedures.resources
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\obj\Debug\BillingSystem.csproj.GenerateResource.Cache
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\obj\Debug\BillingSystem.csproj.CoreCompileInputs.cache
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\obj\Debug\BillingSystem.dll
+D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\obj\Debug\BillingSystem.pdb

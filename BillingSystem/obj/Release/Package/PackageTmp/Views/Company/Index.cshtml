@@ -1,0 +1,259 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .k-grid-content {
+        height: auto !important;
+    }
+
+    #updatePane {
+        overflow-x: scroll;
+    }
+</style>
+<script>
+
+    function PopulateCompanyDetails() {
+        $.post('@Url.Action("PopulateCompanyDetails", "Company")', function (data) {
+            $("#CompanyGrid").data("kendoGrid").dataSource.data(data);
+        });
+    }
+
+    function AddCompanyDetails() {
+        $.post('@Url.Action("LoadCreateCompanyPartialView", "Company")', function (data) {
+            $("#AddCompanyContainer").html(data);
+            $("#myModalAdd").modal("show");
+        });
+    }
+
+    function UpdateCompanyDetails() {
+        debugger;
+        var error = Validate("#UpdateCompany");
+        if (!error) {
+            $.post('@Url.Action("UpdateCompanyDetails", "Company")', $("#UpdateCompany").serialize(), function (data) {
+                if (data > 0) {
+
+                    if (document.getElementById("FileUpload").files.length > 0) {
+                        var formData = new FormData();
+                        var totalFiles = document.getElementById("FileUpload").files.length;
+                        //var totalFiles = selectedFileList.length;
+                        for (var i = 0; i < totalFiles; i++) {
+                            var file = document.getElementById("FileUpload").files[i];
+                            //var file = selectedFileList[i];
+                            formData.append("FileUpload", file);
+                        }
+                        //==========Bind Other Values=================
+                        formData.append("UniqueID", data);
+                        //============================================
+                        $.ajax({
+                            type: "POST",
+                            url: '/Company/Uploads',
+                            data: formData,
+                            dataType: 'json',
+                            contentType: false,
+                            processData: false,
+                            success: function (response) {
+                                alert("Company is successfully updated.");
+                                PopulateCompanyDetails();
+                                $("#myModalEdit").modal("toggle");
+                            },
+                            error: function (error) {
+                                alert(error);
+                            }
+                        });
+                    }
+                    else {
+                        alert("Company is successfully updated.");
+                        PopulateCompanyDetails();
+                        $("#myModalEdit").modal("toggle");
+                    }
+                }
+                else if (data == -2) {
+                    alert("Company is already exists.");
+                }
+                else {
+                    alert("Something went wrong!");
+                }
+            });
+
+        }
+        else {
+            return false;
+        }
+    }
+
+    function SubmitCompanyDetails() {
+        var error = Validate("#AddCompany");
+        if (!error) {
+            $.post('@Url.Action("AddCompanyDetails", "Company")', $("#AddCompany").serialize(), function (data) {
+                if (data > 0) {
+                    var formData = new FormData();
+                    var totalFiles = document.getElementById("FileUpload").files.length;
+                    //var totalFiles = selectedFileList.length;
+                    for (var i = 0; i < totalFiles; i++) {
+                        var file = document.getElementById("FileUpload").files[i];
+                        //var file = selectedFileList[i];
+                        formData.append("FileUpload", file);
+                    }
+                    //==========Bind Other Values=================
+                    formData.append("UniqueID", data);
+                    //============================================
+                    $.ajax({
+                        type: "POST",
+                        url: '/Company/Uploads',
+                        data: formData,
+                        dataType: 'json',
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            alert("Company is successfully submitted.");
+                            PopulateCompanyDetails();
+                            $("#myModalAdd").modal("toggle");
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                }
+                else if (data == -2) {
+                    alert("Company is already exists.");
+                }
+                else {
+                    alert("Something went wrong!");
+                }
+            });
+
+        }
+        else {
+            return false;
+        }
+    }
+
+    function EditRecord(e) {
+        var UniqueID = this.dataItem($(e.currentTarget).closest("tr")).UniqueID;
+        var CompanyName = this.dataItem($(e.currentTarget).closest("tr")).CompanyName;
+        var CompanyAddress = this.dataItem($(e.currentTarget).closest("tr")).CompanyAddress;
+        var GSTNumber = this.dataItem($(e.currentTarget).closest("tr")).GSTNumber;
+        var StateName = this.dataItem($(e.currentTarget).closest("tr")).StateName;
+        var CityName = this.dataItem($(e.currentTarget).closest("tr")).CityName;
+        var PinCode = this.dataItem($(e.currentTarget).closest("tr")).PinCode;
+        var BankName = this.dataItem($(e.currentTarget).closest("tr")).BankName;
+        var AccountNumber = this.dataItem($(e.currentTarget).closest("tr")).AccountNumber;
+        var IFSCCode = this.dataItem($(e.currentTarget).closest("tr")).IFSCCode;
+        var ContactNo = this.dataItem($(e.currentTarget).closest("tr")).ContactNo;
+        var EmailID = this.dataItem($(e.currentTarget).closest("tr")).EmailID;
+        $.post('@Url.Action("LoadPartialCompanyDetailsView", "Company")', {
+            UniqueID: UniqueID, CompanyName: CompanyName,
+            GSTNumber: GSTNumber, CompanyAddress: CompanyAddress, StateName: StateName, CityName: CityName,
+            PinCode: PinCode, BankName: BankName, AccountNumber: AccountNumber, IFSCCode: IFSCCode, ContactNo: ContactNo, EmailID: EmailID
+        }, function (data) {
+            $("#EditCompanyContainer").html(data);
+            $("#myModalEdit").modal("show");
+        });
+    }
+</script>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="#">Home</a>
+        </li>
+
+        @*<li>
+            <a href="#">Manage User(s)
+            </a>
+        </li>*@
+        <li class="active">Manage Company(s)</li>
+    </ul>
+    <!-- /.breadcrumb -->
+
+    @*<div class="nav-search" id="nav-search">
+        <form class="form-search">
+            <span class="input-icon">
+                <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="ace-icon fa fa-search nav-search-icon"></i>
+            </span>
+        </form>
+    </div>*@
+    <!-- /.nav-search -->
+</div>
+<div class="page-content">
+
+    <div class="col-lg-12 padding-t">
+        <div class="form-container">
+            <div class="col-md-12 remove-pad-all">
+                <div class="register-btn">
+                    <input type="button" value="Add New Company" id="btnAdd" class="btn-comn-green" onclick="javascript: AddCompanyDetails();">
+                </div>
+                <div style="height: 5px;"></div>
+                <div id="updatePane">
+                    @(Html.Kendo().Grid<BillingSystem.Models.CompanyModels>()
+                    .Name("CompanyGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Command(command => command.Custom("Edit").Click("EditRecord").Text("Edit")).Width(100);
+                        columns.Bound(currentUser => currentUser.CompanyName).Width(200);
+                        columns.Bound(currentUser => currentUser.CompanyAddress).Width(200);
+                        columns.Bound(currentUser => currentUser.GSTNumber).Width(200);
+                        columns.Bound(currentUser => currentUser.StateName).Width(200);
+                        columns.Bound(currentUser => currentUser.CityName).Width(200);
+                        columns.Bound(currentUser => currentUser.PinCode).Width(200);
+                        columns.Bound(currentUser => currentUser.BankName).Width(200);
+                        columns.Bound(currentUser => currentUser.AccountNumber).Width(200);
+                        columns.Bound(currentUser => currentUser.IFSCCode).Width(200);
+
+                    })
+                            //.ToolBar(toolbar => toolbar.Create())
+                            //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+                    .Pageable(pages => pages.PageSizes(true))
+                    .Sortable()
+                    .Filterable()
+                    .Scrollable()
+                            //.Events(x => x.DataBound("Grid_onRowDataBound"))
+                    .DataSource(datasource => datasource
+                        .Ajax()
+                        .PageSize(10)
+                        .ServerOperation(false)
+                        .Model(model => model.Id(user => user.UniqueID))
+                        .Read(read => read.Action("EditingPopup_Read", "Company"))
+                        )
+                        )
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Edit Company</h4>
+            </div>
+
+            <div class="col-sm-12" style="background-color: #fff;">
+                <div id="EditCompanyContainer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Add Company</h4>
+            </div>
+
+            <div class="col-sm-12" style="background-color: #fff;">
+                <div id="AddCompanyContainer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

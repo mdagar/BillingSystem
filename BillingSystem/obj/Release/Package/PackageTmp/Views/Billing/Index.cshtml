@@ -1,0 +1,318 @@
+﻿@model BillingSystem.Models.BillingModels
+@using Utility
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+    function PopulateClientDetails() {
+        $.post('@Url.Action("GetClientDetails", "Billing")', { UniqueID: $("#ClientUniqueID").val() }, function (data) {
+            $("#BillingAddress").val(data.BillingAddress)
+            $("#BillingStateCode").val(data.BillingStateCode)
+            $("#BillingStateName").val(data.BillingStateName)
+            $("#BillingCityName").val(data.BillingCityName)
+            $("#BillingPinCode").val(data.BillingPinCode)
+            $("#ShippingAddress").val(data.ShippingAddress)
+            $("#ShippingStateCode").val(data.ShippingStateCode)
+            $("#ShippingStateName").val(data.ShippingStateName)
+            $("#ShippingCityName").val(data.ShippingCityName)
+            $("#ShippingPinCode").val(data.ShippingPinCode)
+        });
+    }
+
+    $(function () {
+
+        //$('.date-picker').datepicker({
+        //    autoclose: true,
+        //    todayHighlight: true,
+        //    format: 'd MM yyyy'
+        //})
+        //.next().on(ace.click_event, function () {
+        //    $(this).prev().focus();
+        //});
+
+        $.post('@Url.Action("loadBillingLinesView", "Billing")', $("#AddBilling").serialize(), function (data) {
+            $(".BillingLineContainers").html(data);
+        });
+    });
+
+    function AddBillingDetails() {
+        var error = Validate("#AddBilling");
+        if (!error) {
+            var DescriptionOfGoods = 0;
+            var Description = 0;
+            var HSNCode = 0;
+            var Quantity = 0;
+            var Unit = 0;
+            var Rate = 0;
+            $('#addtextboxList > tbody  > tr').each(function (key, value) {
+                //debugger;
+                if ($(this).find("input#BillLines_" + key + "__IsActive").val() == "False") {
+
+                    if ($(this).find("textarea#BillLines_" + key + "__DescriptionOfGoods").val() == "") {
+                        DescriptionOfGoods++;
+                    }
+                    if ($(this).find("textarea#BillLines_" + key + "__Description").val() == "") {
+                        Description++;
+                    }
+                    if ($(this).find("input#BillLines_" + key + "__HSNCode").val() == "") {
+                        HSNCode++;
+                    }
+                    if ($(this).find("input#BillLines_" + key + "__Quantity").val() == "0" || $(this).find("input#BillLines_" + key + "__Quantity").val() == "") {
+                        Quantity++;
+                    }
+                    if ($(this).find("input#BillLines_" + key + "__Unit").val() == "") {
+                        Unit++;
+                    }
+                    if ($(this).find("input#BillLines_" + key + "__Rate").val() == "0" || $(this).find("input#BillLines_" + key + "__Rate").val() == "") {
+                        Rate++;
+                    }
+                }
+            });
+
+            if (DescriptionOfGoods == 0 && Description == 0 && HSNCode == 0 && Quantity == 0 && Unit == 0 && Rate == 0) {
+                $.post('@Url.Action("AddBillingDetails", "Billing")', $("#AddBilling").serialize(), function (data) {
+                if (data > 0) {
+                    alert("Bill is successfully generated.");
+                    window.location.href = "/Billing/ViewBills";
+                }
+                else if (data == -2) {
+                    alert("Bill is already exists.");
+                }
+                else {
+                    alert("Something went wrong!");
+                }
+            });
+        }
+        else {
+            alert("Rows cannot be blank.");
+        }
+
+    }
+    else {
+        return false;
+    }
+}
+
+</script>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="#">Home</a>
+        </li>
+
+        <li>
+            <a href="#">Manage Bill(s)
+            </a>
+        </li>
+        <li class="active">Create Bill</li>
+    </ul>
+    <!-- /.breadcrumb -->
+
+    @*<div class="nav-search" id="nav-search">
+        <form class="form-search">
+            <span class="input-icon">
+                <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="ace-icon fa fa-search nav-search-icon"></i>
+            </span>
+        </form>
+    </div>*@
+    <!-- /.nav-search -->
+</div>
+<div class="page-content">
+
+    <div class="col-lg-12 padding-t">
+        <div class="form-container">
+            @using (Html.BeginForm("AddBilling", "Billing", FormMethod.Post, new { id = "AddBilling", name = "AddBilling", @class = "form-container" }))
+            {
+                <div class="col-md-12 remove-pad-all thumbnail">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Select Company : </div>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.CompanyUniqueID, new ListBound(Model.CompanyUniqueID, "Company").Company, "-- Select Company --", new { @class = "form-cont ddlSelectedItem", @style = "width:168px", Title = "Company Name" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Invoice Date : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.InvoiceDate, new { @class = "form-cont requiredField date-picker", @Value = @DateTime.Now.ToString("dd MMMM yyyy"), Title = "Invoice Date", maxlength = "100", @readonly = "readonly" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Select Bill Type : </div>
+                            <div class="col-sm-6">
+                                <select id="BillTypeID" name="BillTypeID" style="width: 168px;" class="form-cont requiredField" title="Bill Type">
+                                    <option value="">-- Select Bill Type --</option>
+                                    <option value="1">Permanent</option>
+                                    <option value="2">Temporary</option>
+                                </select>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Select GST Type : </div>
+                            <div class="col-sm-6">
+                                <select id="GSTTypeID" name="GSTTypeID" style="width: 168px;" class="form-cont requiredField" title="GST Type">
+                                    <option value="">-- Select GST Type --</option>
+                                    <option value="1">Same State</option>
+                                    <option value="2">Other State</option>
+                                </select>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Mode Of Transport : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.ModeOfTransport, new { @class = "form-cont requiredField", Title = "Mode Of Transport", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Vehicle Number : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.VehicleNumber, new { @class = "form-cont requiredField", Title = "Vehicle No.", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Place Of Supply : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.PlaceOfSupply, new { @class = "form-cont requiredField", Title = "Place Of Suply", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Shipping City Name : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.ShippingCityName, new { @class = "form-cont requiredField", Title = "City Name", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Shipping Pin Code : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.ShippingPinCode, new { @class = "form-cont requiredField numeric", Title = "Shipping Pin Code", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialChar(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Shipping State Name : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.ShippingStateName, new { @class = "form-cont requiredField", Title = "State Name", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Select Client : </div>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(x => x.ClientUniqueID, new ListBound(Model.ClientUniqueID, "Client").Client, "-- Select Client --", new { @style = "width:168px", @class = "form-cont ddlSelectedItem", Title = "Client Name", onchange = "javascript:PopulateClientDetails();" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Billing Address : </div>
+                            <div class="col-sm-6">
+                                @Html.TextAreaFor(x => x.BillingAddress, new { @class = "form-cont requiredField", Title = "Billing Address", maxlength = "200", onpaste = "return false", onkeypress = "return blockSpecialCharForAddress(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Billing State Code : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.BillingStateCode, new { @class = "form-cont requiredField numeric", Title = "State Code", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialChar(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Billing State Name : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.BillingStateName, new { @class = "form-cont requiredField", Title = "State Name", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Billing City Name : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.BillingCityName, new { @class = "form-cont requiredField", Title = "City Name", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Billing Pin Code : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.BillingPinCode, new { @class = "form-cont requiredField numeric", Title = "Billing Pin Code", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialChar(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Shipping Address : </div>
+                            <div class="col-sm-6">
+                                @Html.TextAreaFor(x => x.ShippingAddress, new { @class = "form-cont requiredField", Title = "Shipping Address", maxlength = "200", onpaste = "return false", onkeypress = "return blockSpecialCharForAddress(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Shipping State Code : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.ShippingStateCode, new { @class = "form-cont requiredField numeric", Title = "State Code", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialChar(event);" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Freight Charge : </div>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(x => x.FreightCharge, new { @Value = "0", @class = "form-cont requiredField decimal", Title = "Freight Charge", maxlength = "10", onpaste = "return false" })
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="clearfix"></div>
+
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-12 remove-pad-all thumbnail">
+
+                    <div class="BillingLineContainers">
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            }
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+</div>

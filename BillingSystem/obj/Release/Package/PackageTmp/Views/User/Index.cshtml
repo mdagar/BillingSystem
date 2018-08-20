@@ -1,0 +1,262 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .k-grid-content {
+        height: auto !important;
+    }
+</style>
+<script>
+    function hideIdField(e) {
+        $("#ActionId").hide();
+        $("label[for='ActionId']").hide();
+
+        $("#UniqueID").hide();
+        $("label[for='UniqueID']").hide();
+
+        $("#LoginAttempt").hide();
+        $("label[for='LoginAttempt']").hide();
+
+        $("#IsActive").hide();
+        $("label[for='IsActive']").hide();
+
+        $("#CreatedOn").hide();
+        $("label[for='CreatedOn']").hide();
+
+        $("#CreatedBy").hide();
+        $("label[for='CreatedBy']").hide();
+
+        $("#ModifiedOn").hide();
+        $("label[for='ModifiedOn']").hide();
+
+        $("#ModifiedBy").hide();
+        $("label[for='ModifiedBy']").hide();
+
+        $("#CreatedDate").hide();
+        $("label[for='CreatedDate']").hide();
+    }
+
+    function Grid_onRowDataBound(e) {
+
+        var grid = $("#UserGrid").data("kendoGrid");
+        var data = grid.dataSource.data();
+        debugger;
+        grid.tbody.find('>tr').each(function () {
+            var dataItem = grid.dataItem(this);
+            if (dataItem.IsActive == true) {
+                var updateBtn = $(this).find(".k-grid-delete");
+                updateBtn.html('<span class="k-icon k-delete"></span>De-Activate');
+            }
+            else {
+                var updateBtn = $(this).find(".k-grid-delete");
+                updateBtn.html('<span class="k-icon k-delete"></span>Activate');
+            }
+        });
+
+    }
+    function PopulateUserDetails() {
+        $.post('@Url.Action("PopulateUserDetails", "User")', function (data) {
+            $("#UserGrid").data("kendoGrid").dataSource.data(data);
+        });
+    }
+
+    function AddUserDetails() {
+        $.post('@Url.Action("LoadCreateUserPartialView", "User")', function (data) {
+            $("#AddUserContainer").html(data);
+            $("#myModalAdd").modal("show");
+        });
+    }
+
+    function UpdateUserDetails() {
+        debugger;
+        var error = Validate("#UpdateUser");
+        if (!error) {
+            $.post('@Url.Action("UpdateUserDetails", "User")', $("#UpdateUser").serialize(), function (data) {
+                if (data > 0) {
+                    alert("User is successfully updated.");
+                    PopulateUserDetails();
+                    $("#myModalEdit").modal("toggle");
+                }
+                else if (data == -2) {
+                    alert("User is already exists.");
+                }
+                else {
+                    alert("Something went wrong!");
+                }
+            });
+
+        }
+        else {
+            return false;
+        }
+    }
+
+    function SubmitUserDetails() {
+        var error = Validate("#AddUser");
+        if (!error) {
+            $.post('@Url.Action("AddUserDetails", "User")', $("#AddUser").serialize(), function (data) {
+                if (data > 0) {
+                    alert("User is successfully submitted.");
+                    PopulateUserDetails();
+                    $("#myModalAdd").modal("toggle");
+                }
+                else if (data == -2) {
+                    alert("User is already exists.");
+                }
+                else {
+                    alert("Something went wrong!");
+                }
+            });
+
+        }
+        else {
+            return false;
+        }
+    }
+
+    function EditRecord(e) {
+        $.post('@Url.Action("LoadPartialUserDetailsView", "User")', {
+            UniqueID: e
+        }, function (data) {
+            $("#EditUserContainer").html(data);
+            $("#myModalEdit").modal("show");
+        });
+    }
+
+    function ActivateDeactivateRecord(UniqueID, flag) {
+        if (flag == 1) {
+            if (confirm("Are you sure you want to De-activate the user.")) {
+                $.post('@Url.Action("ActivateDeActivateUserDetails", "User")', { UniqueID: UniqueID, Flag: flag }, function (data) {
+                    if (data > 0) {
+                        alert("User is successfully De-activated.");
+                        PopulateUserDetails();
+                    }
+                    else {
+                        alert("Something went wrong!");
+                    }
+                });
+            }
+        }
+        else if (flag == 2) {
+            if (confirm("Are you sure you want to Activate the user.")) {
+                $.post('@Url.Action("ActivateDeActivateUserDetails", "User")', { UniqueID: UniqueID, Flag: flag }, function (data) {
+                    if (data > 0) {
+                        alert("User is successfully Activated.");
+                        PopulateUserDetails();
+                    }
+                    else {
+                        alert("Something went wrong!");
+                    }
+                });
+            }
+        }
+}
+
+</script>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="#">Home</a>
+        </li>
+
+        <li>
+            <a href="#">Manage User(s)
+            </a>
+        </li>
+        <li class="active">Create User</li>
+    </ul>
+    <!-- /.breadcrumb -->
+
+    @*<div class="nav-search" id="nav-search">
+        <form class="form-search">
+            <span class="input-icon">
+                <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="ace-icon fa fa-search nav-search-icon"></i>
+            </span>
+        </form>
+    </div>*@
+    <!-- /.nav-search -->
+</div>
+<div class="page-content">
+
+    <div class="col-lg-12 padding-t">
+        <div class="form-container">
+            <div class="col-md-12 remove-pad-all">
+                <div class="register-btn">
+                    <input type="button" value="Add New User" id="btnAdd" class="btn-comn-green" onclick="javascript: AddUserDetails();">
+                </div>
+                <div style="height: 5px;"></div>
+                <div id="updatePane">
+                    @(Html.Kendo().Grid<BillingSystem.Models.UserModels>()
+                    .Name("UserGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(currentUser => currentUser.UniqueID).ClientTemplate("#if(IsActive==true){#" +
+                            "<input type='button' id='btnDeActivate' value='De-Activate' onclick='javascript:ActivateDeactivateRecord(#:UniqueID#,1);' />" +
+                            "#}else{# <input type='button' id='btnActivate' value='Activate' onclick='javascript:ActivateDeactivateRecord(#:UniqueID#,2);' /> #}#&nbsp;<input type='button' id='btnEdit' value='Edit' onclick='javascript:EditRecord(#:UniqueID#);' />").Title("Action").Width(150);
+                        columns.Bound(currentUser => currentUser.UserName);
+                        columns.Bound(currentUser => currentUser.EmailID);
+                        columns.Bound(currentUser => currentUser.IsActive);
+                        columns.Bound(currentUser => currentUser.CreatedDate);
+                        //columns.Command(command => { command.Edit(); command.Destroy(); });
+                    })
+                            //.ToolBar(toolbar => toolbar.Create())
+                            //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+                    .Pageable(pages => pages.PageSizes(true))
+                    .Sortable()
+                    .Filterable()
+                    .Scrollable()
+                            //.Events(x => x.Edit("hideIdField").DataBound("Grid_onRowDataBound"))
+                            //.Events(x => x.DataBound("Grid_onRowDataBound"))
+                    .DataSource(datasource => datasource
+                        .Ajax()
+                        .PageSize(10)
+                        .ServerOperation(false)
+                        .Model(model => model.Id(user => user.UniqueID))
+                        .Read(read => read.Action("EditingPopup_Read", "User"))
+                            //.Create(update => update.Action("EditingPopup_Create", "User"))
+                            //.Update(update => update.Action("EditingPopup_Update", "User"))
+                            //.Destroy(update => update.Action("EditingPopup_Destroy", "User"))
+                        )
+                        )
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Edit User</h4>
+            </div>
+
+            <div class="col-sm-12" style="background-color: #fff;">
+                <div id="EditUserContainer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Add User</h4>
+            </div>
+
+            <div class="col-sm-12" style="background-color: #fff;">
+                <div id="AddUserContainer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

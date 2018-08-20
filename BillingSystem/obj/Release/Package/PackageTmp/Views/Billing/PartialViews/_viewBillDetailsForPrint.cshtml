@@ -1,0 +1,485 @@
+﻿@model BillingSystem.Models.BillingModels
+@{
+    Layout = null;
+    int Quantity = 0;
+    decimal TotalValue = 0;
+    string str = "@";
+}
+
+<script>
+    $(document).ready(function () {
+        //set the initial body width
+        var originalWidth = 400;
+        debugger;
+        var totalCount = "@Model.BillLines.Count";
+        originalWidth = originalWidth - totalCount * 15;
+
+        $(".minHeight").css("min-height", originalWidth);
+
+        document.getElementById("ItemPreview").src = "data:image/png;base64," + "@Convert.ToBase64String(Model.CompanyLogo, 0, Model.CompanyLogo.Length)";//"@Model.CompanyLogo";
+
+    });
+
+    function printDiv() {
+        var divToPrint = document.getElementById('DivIdToPrint');
+
+        var newWin = window.open('', 'Print-Window');
+        newWin.document.open();
+        newWin.document.write('<html><body onload="window.print()"><div>Original Invoice</div>' + divToPrint.innerHTML + "<div style='page-break-after: always;'></div><div>Buyer Invoice</div>" + divToPrint.innerHTML + "<div style='page-break-after: always;'></div><div>Extra Invoice</div>" + divToPrint.innerHTML + '</body></html>');
+        newWin.document.close();
+        setTimeout(function () { newWin.close(); }, 10);
+    }
+
+</script>
+<input type='button' id='btn' value='Print' onclick='printDiv();'>
+<div id="DivIdToPrint">
+    
+<table style="border-collapse: collapse; border: none;" width="758" >
+        <tbody>
+            <tr>
+                <td style="width: 568.8pt; border: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt;" colspan="8" width="758">
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt;  "><strong><span style="font-size: 8.0pt;   font-family: 'Arial','sans-serif';">GSTIN: @Model.CompanyGSTNumber</span></strong><strong><span style="font-size: 12.0pt;   font-family: 'Arial','sans-serif';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></strong><strong><span style="font-size: 10.0pt;   font-family: 'Arial','sans-serif';">SALE INVOICE</span></strong></p>
+                    <table style="border-collapse: collapse; border: none;" width="737">
+                        <tbody>
+                            <tr>
+                                <td style="width: 80.65pt; padding: 0cm 5.4pt 0cm 5.4pt;" width="94">
+                                    <img id="ItemPreview" src="" style="height: 75px; width: 99px"/>
+                                    @*<img src="/assets/images/logo.png" style="height: 75px; width: 99px" />*@&nbsp;</td>
+                                <td style="width: 17.0cm; padding: 0cm 5.4pt 0cm 5.4pt; font-weight:bold; text-align:center;" width="643">
+                                    <p style="margin-bottom: .0001pt; margin-top: 1pt; line-height: normal;"><span style="font-size: 15.0pt; font-family: 'Arial','sans-serif';"> 
+                                        @Model.CompanyName</span></p>
+                                    <p style="margin-bottom: .0001pt; margin-top: 1pt; line-height: normal;"><span style="font-size: 9.0pt; margin-top: 1pt; font-family: 'Arial','sans-serif';"
+                                        >@Model.CompanyAddress, @Model.StateName, @Model.CityName, @Model.PinCode</span></p>
+                                    <p style="margin-bottom: .0001pt; margin-top: 1pt; line-height: normal;"><span style="font-size: 9.0pt; font-family: 'Arial','sans-serif';"> 
+                                        Contact No. @Model.ContactNo Email: @Model.EmailID</span></p>
+                                </td>
+                                <td style="width: 80.65pt; padding: 0cm 5.4pt 0cm 5.4pt;" width="94">
+                                    @*<img src="/assets/images/logo.png" style="height: 75px; width: 99px" />*@
+                                    &nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 50%; border: double windowtext 1.5pt; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;" colspan="3" >
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt;  width: 190px;"><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Invoice No : <strong>@Model.InvoiceNumber</strong></span></p>
+                </td>
+                <td style="width: 40%; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt;" colspan="5">
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt;" ><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Invoice Date : <strong>@Model.InvoiceDate`</strong></span></p>
+                </td>
+            </tr>
+            <tr style="height: 41.65pt;">
+                <td style="width: 265.95pt; border: double windowtext 1.5pt; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt; height: 41.65pt;" colspan="3" width="355">
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt;" ><span style="font-size: 9.0pt;  font-family: 'Arial','sans-serif';">Mode of Transport : @Model.ModeOfTransport</span></p>
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt; "><span style="font-size: 9.0pt;  font-family: 'Arial','sans-serif';">Vehicle No : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Model.VehicleNumber<br />
+                        Place Of Supply : &nbsp;&nbsp;&nbsp;@Model.PlaceOfSupply</span></p>
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt; "><span style="font-size: 9.0pt;  font-family: 'Arial','sans-serif';">&nbsp;</span></p>
+                </td>
+                <td style="width: 302.85pt; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; height: 41.65pt;" colspan="5" width="404">
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt; "><strong><u><span style="font-size: 9.0pt;  font-family: 'Arial','sans-serif';">Our Bank Details :-</span></u></strong></p>
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt; "><span style="font-size: 9.0pt;  font-family: 'Arial','sans-serif';">Bank Name : @Model.BankName<br />
+                        A/C No : @Model.AccountNumber</span></p>
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt; "><span style="font-size: 9.0pt;  font-family: 'Arial','sans-serif';">IFSC Code : @Model.IFSCCode</span></p>
+                </td>
+            </tr>
+            <tr style="height: 9.4pt;">
+                <td style="width: 25%; border: double windowtext 1.5pt; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt; height: 9.4pt;" colspan="3" >
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt; "><strong><span style="font-size: 9.0pt;  font-family: 'Arial','sans-serif';">Details of Buyer (Billing To)</span></strong></p>
+                </td>
+                <td style="width: 30%; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; height: 9.4pt;" colspan="5" >
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt; ;"><strong><span style="font-size: 9.0pt;  font-family: 'Arial','sans-serif';">Details of Consignee (Shipping To)</span></strong></p>
+                </td>
+            </tr>
+            <tr style="height: 9.35pt;">
+                <td style="width: 301.15pt; border: double windowtext 1.5pt; border-top: none;  height: 9.35pt;" colspan="3" >
+                    <p style="  margin: 4.0pt 0cm .0001pt 0cm;"><span style="font-size: 9.0pt;  font-family: 'Arial','sans-serif';"><strong>@Model.ClientName</strong></span></p>
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt;  "><span style="font-size: 9.0pt; font-family: 'Arial','sans-serif';">@Model.BillingAddress</span></p>
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt;  "><span style="font-size: 9.0pt;  font-family: 'Arial','sans-serif';">STATE : @Model.BillingStateName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATECODE : @Model.BillingStateCode</span></p>
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt;  "><strong><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">GSTIN : @Model.ClientGSTNumber</span></strong><span style="font-size: 9.5pt;   font-family: 'Arial','sans-serif';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VENDOR CODE : </span></p>
+                </td>
+                <td style="width: 301.15pt; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt;  height: 9.35pt;" colspan="5" width="402">
+                    <p style="  margin-top: 1pt; margin: 4.0pt 0cm .0001pt 0cm;"><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';"><strong>@Model.ClientName</strong></span></p>
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.ShippingAddress</span></p>
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">STATE : @Model.ShippingStateName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATECODE : @Model.ShippingStateCode</span></p>
+                    <p style="margin-bottom: .0001pt; margin-top: 1pt;  "><strong><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">GSTIN : @Model.ClientGSTNumber</span></strong><span style="font-size: 9.5pt;   font-family: 'Arial','sans-serif';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
+                </td>
+            </tr>
+            <tr style="height: 18.75pt;">
+                <td style="width: 100%; border: double windowtext 1.5pt; border-top: none;  height: 18.75pt;" colspan="8">
+                    <p style="margin-bottom: .0001pt;  margin-top: 0px;"><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">P.O NO:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ORDER DATE :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHALLAN NO: </span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 5%; border: double windowtext 1.5pt; border-top: none; " >
+                    <p style="text-align: center;   margin: 2.0pt 0cm .0001pt 0cm;"><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">S.No</span></p>
+                </td>
+                <td style="width: 30%; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt; " >
+                    <p style="text-align: center;   margin: 2.0pt 0cm .0001pt 0cm;"><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Description of Goods</span></p>
+                </td>
+                <td style="width: 20%; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt; " >
+                    <p style="text-align: center;   margin: 2.0pt 0cm .0001pt 0cm;"><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Description</span></p>
+                </td>
+                <td style="width: 10%; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt; "  >
+                    <p style="margin-bottom: .0001pt; text-align: center;margin: 2.0pt 0cm .0001pt 0cm; line-height: normal;"><span style="font-size: 9.0pt; font-family: 'Arial','sans-serif';">HSN Code</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt; " >
+                    <p style="text-align: center;   margin: 2.0pt 0cm .0001pt 0cm;"><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Qty</span></p>
+                </td>
+                <td style="width: 10%; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt; " >
+                    <p style="text-align: center;   margin: 2.0pt 0cm .0001pt 0cm;"><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Unit</span></p>
+                </td>
+                <td style="width: 10%; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt;" >
+                    <p style="text-align: center;   margin: 2.0pt 0cm .0001pt 0cm;"><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Rate</span></p>
+                </td>
+                <td style="width: 10%; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt;" >
+                    <p style="text-align: center;   margin: 2.0pt 0cm .0001pt 0cm;"><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Amount</span></p>
+                </td>
+            </tr>
+            @if (Model.BillLines.Count > 0)
+            {
+                for (int i = 0; i < Model.BillLines.Count; i++)
+                {
+                    if (Model.BillLines.Count == 1)
+                    {
+                        <tr style="height: 10.7pt;">
+                <td style="width: 5%; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;  border-style: none double none double; border-width: 1.5pt; border-color: windowtext;" >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToInt32(i + 1)</span></p>
+                </td>
+                <td style="width: 35%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; "  >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].DescriptionOfGoods</span></p>
+                </td>
+                <td style="width: 20%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Description</span></p>
+                </td>
+                <td style="width: 15%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].HSNCode</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Quantity</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Unit</span></p>
+                </td>
+                 <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Rate</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; ">
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToDecimal(Model.BillLines[i].Quantity * Model.BillLines[i].Rate)</span></p>
+                </td>
+            </tr>
+                        
+                    }
+                    else if (Model.BillLines.Count == 2)
+                    {
+                        if (i == 0)
+                        {
+                            <tr style="height: 10.7pt;">
+                <td style="width: 5%; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;  border-style: none double none double; border-width: 1.5pt; border-color: windowtext;" >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToInt32(i + 1)</span></p>
+                </td>
+                <td style="width: 35%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; "  >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].DescriptionOfGoods</span></p>
+                </td>
+                <td style="width: 20%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Description</span></p>
+                </td>
+                <td style="width: 15%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].HSNCode</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Quantity</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Unit</span></p>
+                </td>
+                 <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Rate</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; ">
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToDecimal(Model.BillLines[i].Quantity * Model.BillLines[i].Rate)</span></p>
+                </td>
+            </tr>
+                        }
+                        else if (i == 1)
+                        {
+                            <tr style="height: 10.7pt;">
+                <td style="width: 5%; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;  border-style: none double none double; border-width: 1.5pt; border-color: windowtext;" >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToInt32(i + 1)</span></p>
+                </td>
+                <td style="width: 35%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; "  >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].DescriptionOfGoods</span></p>
+                </td>
+                <td style="width: 20%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Description</span></p>
+                </td>
+                <td style="width: 15%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].HSNCode</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Quantity</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Unit</span></p>
+                </td>
+                 <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Rate</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; ">
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToDecimal(Model.BillLines[i].Quantity * Model.BillLines[i].Rate)</span></p>
+                </td>
+            </tr>
+                        }
+                    }
+                    else if (Model.BillLines.Count > 2)
+                    {
+                        if (i == 0)
+                        {
+                            <tr style="height: 10.7pt;">
+                <td style="width: 5%; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;  border-style: none double none double; border-width: 1.5pt; border-color: windowtext;" >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToInt32(i + 1)</span></p>
+                </td>
+                <td style="width: 35%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; "  >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].DescriptionOfGoods</span></p>
+                </td>
+                <td style="width: 20%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Description</span></p>
+                </td>
+                <td style="width: 15%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].HSNCode</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Quantity</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Unit</span></p>
+                </td>
+                 <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Rate</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; ">
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToDecimal(Model.BillLines[i].Quantity * Model.BillLines[i].Rate)</span></p>
+                </td>
+            </tr>
+                        }
+                        else if (i == Model.BillLines.Count - 1)
+                        {
+                            <tr style="height: 10.7pt;">
+                <td style="width: 5%; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;  border-style: none double none double; border-width: 1.5pt; border-color: windowtext;" >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToInt32(i + 1)</span></p>
+                </td>
+                <td style="width: 35%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; "  >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].DescriptionOfGoods</span></p>
+                </td>
+                <td style="width: 20%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Description</span></p>
+                </td>
+                <td style="width: 15%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].HSNCode</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Quantity</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Unit</span></p>
+                </td>
+                 <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Rate</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; ">
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToDecimal(Model.BillLines[i].Quantity * Model.BillLines[i].Rate)</span></p>
+                </td>
+            </tr>
+                        }
+                        else
+                        {
+                            <tr style="height: 10.7pt;">
+                <td style="width: 5%; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;  border-style: none double none double; border-width: 1.5pt; border-color: windowtext;" >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToInt32(i + 1)</span></p>
+                </td>
+                <td style="width: 35%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; "  >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].DescriptionOfGoods</span></p>
+                </td>
+                <td style="width: 20%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Description</span></p>
+                </td>
+                <td style="width: 15%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].HSNCode</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Quantity</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Unit</span></p>
+                </td>
+                 <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.BillLines[i].Rate</span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; ">
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Convert.ToDecimal(Model.BillLines[i].Quantity * Model.BillLines[i].Rate)</span></p>
+                </td>
+            </tr>
+                        }
+
+                    }
+
+
+                    Quantity = Quantity + Model.BillLines[i].Quantity;
+                    TotalValue = TotalValue + (Model.BillLines[i].Quantity * Model.BillLines[i].Rate);
+
+
+                }
+            }
+            <tr style="height: 10.7pt;">
+                <td style="width: 5%; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;  border-style: none double double double; border-width: 1.5pt; border-color: windowtext;" >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">
+                        <div class="minHeight"></div>
+                                                         </span></p>
+                </td>
+                <td style="width: 35%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; "  >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';"><div class="minHeight"></div></span></p>
+                </td>
+                <td style="width: 20%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';"><div class="minHeight"></div></span></p>
+                </td>
+                <td style="width: 15%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';"><div class="minHeight"></div></span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';"><div class="minHeight"></div></span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';"><div class="minHeight"></div></span></p>
+                </td>
+                 <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; " >
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';"><div class="minHeight"></div></span></p>
+                </td>
+                <td style="width: 5%; border-top: none; border-left: none; border-bottom: none windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt; ">
+                    <p style="margin-bottom: .0001pt;  "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';"><div class="minHeight"></div></span></p>
+                </td>
+            </tr>
+            <tr style="height: 10.9pt;">
+                <td style="width: 568.8pt; border: double windowtext 1.5pt; border-top: none;  height: 10.9pt;" colspan="8" width="758">
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Quantity</span><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif'; float:right;"  id="STotalValue"></span></p>
+                </td>
+            </tr>
+            <script>
+                $(function () {
+                    $.post('@Url.Action("CalculateTotalWordsValues", "Billing")', { Value: "@Convert.ToDecimal(TotalValue + Model.FreightCharge)" }, function (data) {
+                        if ("@Model.GSTType" == "Same State") {
+                            $("#CGSTWords").text(data.split('$')[0]);
+                            $("#SGSTWords").text(data.split('$')[1]);
+                            $("#IGSTWords").text("Zero only");
+                            //$("#TotalWords").text(data.split('$')[3]);
+                        }
+                        else {
+                            $("#CGSTWords").text("Zero only");
+                            $("#SGSTWords").text("Zero only");
+                            $("#IGSTWords").text(data.split('$')[2]);
+                            //$("#TotalWords").text(data.split('$')[3]);
+                        }
+                    });
+
+                    $.post('@Url.Action("CalculateTotalWordsValues", "Billing")', { Value: $("#GrandTotal").text() }, function (data) {
+                        $("#TotalWords").text(data.split('$')[3]);
+                    });
+
+                    @*$.post('@Url.Action("CalculateTotalValues", "Billing")', { Value: "@Convert.ToDecimal(TotalValue + Model.FreightCharge)" }, function (data) {
+                        if ("@Model.GSTType" == "Same State") {
+                            $("#CGSTVal").text(data.split('$')[0]);
+                            $("#SGSTVal").text(data.split('$')[1]);
+                            $("#GrandTotal").text((parseFloat(data.split('$')[0]) + parseFloat(data.split('$')[1]) + parseFloat(data.split('$')[3])).toFixed());
+                        }
+                        else {
+                            $("#IGSTVal").text(data.split('$')[2]);
+                            $("#GrandTotal").text((parseFloat(data.split('$')[2]) + parseFloat(data.split('$')[3])).toFixed());
+                        }
+                        $("#TotalValue").text(data.split('$')[3]);
+                        $("#STotalValue").text("@TotalValue");
+                        debugger;
+                        $.post('@Url.Action("CalculateTotalWordsValues", "Billing")', { Value: $("#GrandTotal").text() }, function (data) {
+                            $("#TotalWords").text(data.split('$')[3]);
+                        });
+
+                    });*@
+
+                });
+            </script>
+            <tr>
+                <td style="width: 260.55pt; border: double windowtext 1.5pt; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;" colspan="3" width="347">
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><strong><span style="font-size: 9.0pt; font-weight:normal;   font-family: 'Arial','sans-serif';">CGST in Words:</span></strong></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt; font-weight:bold;  font-family: 'Arial','sans-serif';" id="CGSTWords"></span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><strong><span style="font-size: 9.0pt; font-weight:normal;  font-family: 'Arial','sans-serif';">SGST in Words:</span></strong></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;  font-weight:bold; font-family: 'Arial','sans-serif';" id="SGSTWords"></span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><strong><span style="font-size: 9.0pt; font-weight:normal;  font-family: 'Arial','sans-serif';">IGST in Words:</span></strong></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;  font-weight:bold; font-family: 'Arial','sans-serif';" id="IGSTWords"></span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><strong><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Grand Total : </span></strong></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt; font-weight:bold;  font-family: 'Arial','sans-serif';" id="TotalWords"></span></p>
+                    <!--<p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">&nbsp;</span></p>-->
+                    <!--<p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">&nbsp;</span></p>-->
+                    <!--<p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">&nbsp;</span></p>-->
+                </td>
+                <td style="width: 163.05pt; font-weight:bold; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt;" colspan="3" width="217">
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Freight Charge : </span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Loading and packaging Charge: </span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Taxable Amount : </span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">CGST : </span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">SGST : </span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">IGST : </span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Round Off : </span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">TSC : </span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">Grand Total : </span></p>
+                    <!--<p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">&nbsp;</span></p>-->
+                    <!--<p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">&nbsp;</span></p>-->
+                    <!--<p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">&nbsp;</span></p>-->
+                </td>
+                <td style="width: 145.2pt; border-top: none; border-left: none; border-bottom: double windowtext 1.5pt; border-right: double windowtext 1.5pt; padding: 0cm 5.4pt 0cm 5.4pt;" colspan="2" width="194">
+                    <p style="margin-bottom: .0001pt; text-align: right; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.FreightCharge</span></p>
+                    <p style="margin-bottom: .0001pt; text-align: right; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.LoadingCharges</span></p>
+                    <p style="margin-bottom: .0001pt; text-align: right; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.TaxableAmount</span></p>
+                    
+                    <p style="margin-bottom: .0001pt; text-align: left; margin-top:0px; ">@if(Model.CGST>0){<span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">9.00 %</span>}
+                                                                                          else
+                                                                                          {<span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">0.00 %</span>}
+                                                                                          <span style="font-size: 9.0pt; float:right;  font-family: 'Arial','sans-serif';" id="CGSTVal">@Model.CGST</span></p>
+                    <p style="margin-bottom: .0001pt; text-align: left; margin-top:0px; ">@if(Model.SGST>0){<span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">9.00 %</span>}
+                                                                                          else
+                                                                                          {<span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">0.00 %</span>}<span style="font-size: 9.0pt; float:right;  font-family: 'Arial','sans-serif';" id="SGSTVal">@Model.SGST</span></p>
+                    <p style="margin-bottom: .0001pt; text-align: left;margin-top:0px;  ">@if(Model.IGST>0){<span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">18.00 %</span>}
+                                                                                          else
+                                                                                          {<span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">0.00 %</span>}<span style="font-size: 9.0pt; float:right;  font-family: 'Arial','sans-serif';">@Model.IGST</span></p>
+                    
+                    <p style="margin-bottom: .0001pt; text-align: right; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">@Model.RoundOff</span></p>
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">0.00 %</span><span style="font-size: 9.0pt; float:right;  font-family: 'Arial','sans-serif';">@Model.TSC</span></p>
+                    <p style="margin-bottom: .0001pt; text-align: right; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">INR <span id="GrandTotal">@Model.GrandTotal</span></span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 568.8pt; border: double windowtext 1.5pt; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;" colspan="8" width="758">
+                    <p style="margin-bottom: .0001pt; margin-top:0px; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">
+                        Certified that the particulars given above are true and correct under the GST Act 2017 and the amount indicated represent the actually change and that there is no flow of additional consideration or directly from buyer.
+                                                                        </span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 568.8pt; border: double windowtext 1.5pt;border-bottom: none; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;" colspan="8" width="758">
+                    <p style="margin-bottom: .0001pt; text-align: left; margin-top:2px; float:left; width:60%; "><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">
+                        Terms and Condition:<br />
+                        1. Rejection if any will be accepted that in condition in which material is supplied.<br />
+                        2. if payment is not paid within due days @str 24% P.A. will be charge.<br />
+                        3. All dispute are subject to Faridabad jurisdiction only.
+                                                                           </span></p>
+                    <p style="margin-bottom: .0001pt; text-align: right; margin-top:2px; float:left; width:40%; "><span style="font-size: 10pt;   font-family: 'Arial','sans-serif';">FOR @Model.CompanyName</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 568.8pt; border: double windowtext 1.5pt; border-top: none; padding: 0cm 5.4pt 0cm 5.4pt;" colspan="8" width="758">
+                    <p style="margin-bottom: .0001pt;  "><strong><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">&nbsp;</span></strong></p>
+                    
+                    <p style="margin-bottom: .0001pt;  "><strong><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">&nbsp;</span></strong></p>
+                    <p style="margin-bottom: .0001pt;  "><strong><span style="font-size: 9.0pt;   font-family: 'Arial','sans-serif';">E&amp;OE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></strong><span style="font-size: 10.5pt;   font-family: 'Arial','sans-serif';">Received Signature &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authorized Signature</span></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>

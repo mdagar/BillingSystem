@@ -1,0 +1,140 @@
+﻿@{
+    ViewBag.Title = "ViewBills";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function ViewBillContainer(BillingUniqueID) {
+        window.open("/Billing/PrintBill?UniqueID=" + BillingUniqueID, "_blank");
+    }
+
+    function CreateBill() {
+        window.location.href = "/Billing/index";
+    }
+
+    function EditRecord(UniqueID) {
+        $.post('@Url.Action("PopulateBillingDetailsForEdit", "Billing")', {
+            UniqueID: UniqueID
+        }, function (data) {
+            debugger;
+            $("#EditBillContainer").html(data);
+            $("#myModalEdit").modal("show");
+            $.post('@Url.Action("loadBillingLinesEdit", "Billing")', $("#UpdateBilling").serialize(), function (data) {
+                $(".BillingLineContainers").html(data);
+            });
+
+            
+
+            $('.date-picker').datepicker({
+                autoclose: true,
+                todayHighlight: true,
+                format: 'd MM yyyy'
+            })
+       .next().on(ace.click_event, function () {
+           $(this).prev().focus();
+       });
+
+        });
+    }
+
+</script>
+<script src="~/assets/js/bootstrap-datepicker.min.js"></script>
+<style>
+    .k-grid-content {
+        height: auto !important;
+    }
+
+    #updatePane {
+        overflow-x: scroll;
+    }
+</style>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="#">Home</a>
+        </li>
+
+        <li>
+            <a href="#">Manage Bill(s)
+            </a>
+        </li>
+        <li class="active">View Bill(s)</li>
+    </ul>
+    <!-- /.breadcrumb -->
+
+    @*<div class="nav-search" id="nav-search">
+        <form class="form-search">
+            <span class="input-icon">
+                <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="ace-icon fa fa-search nav-search-icon"></i>
+            </span>
+        </form>
+    </div>*@
+    <!-- /.nav-search -->
+</div>
+<div class="page-content">
+
+    <div class="col-lg-12 padding-t">
+        <div class="form-container">
+            <div class="col-md-12 remove-pad-all">
+                <input type='button' id='btnCreateBill' value='Create Bill' onclick='javascript: CreateBill();' />
+                <br />
+                <div id="updatePane">
+                    @(Html.Kendo().Grid<BillingSystem.Models.BillingModels>()
+                    .Name("BillGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(currentUser => currentUser.UniqueID).ClientTemplate("#if(BillTypeID==2){#" +
+                            "<input type='button' id='btnEdit' value='Edit' onclick='javascript:EditRecord(#:UniqueID#);' />" +
+                            "#}# <input type='button' id='btnView' value='View Bill' onclick='javascript:ViewBillContainer(#:UniqueID#);' />").Title("Action").Width(150);
+                        columns.Bound(currentUser => currentUser.InvoiceNumber).Width(100);
+                        columns.Bound(currentUser => currentUser.InvoiceDate).Width(100);
+                        columns.Bound(currentUser => currentUser.CompanyName).Width(200);
+                        columns.Bound(currentUser => currentUser.CompanyAddress).Width(200);
+                        columns.Bound(currentUser => currentUser.ClientName).Width(200);
+                        columns.Bound(currentUser => currentUser.BillingAddress).Width(200);
+                        columns.Bound(currentUser => currentUser.BillingStateName).Width(200);
+                        columns.Bound(currentUser => currentUser.ShippingAddress).Width(200);
+                        columns.Bound(currentUser => currentUser.ShippingStateName).Width(200);
+                        columns.Bound(currentUser => currentUser.BillType).Width(200);
+                        columns.Bound(currentUser => currentUser.GSTType).Width(200);
+
+                    })
+                            //.ToolBar(toolbar => toolbar.Create())
+                            //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+                    .Pageable(pages => pages.PageSizes(true))
+                    .Sortable()
+                    .Filterable()
+                    .Scrollable()
+                            //.Events(x => x.DataBound("Grid_onRowDataBound"))
+                    .DataSource(datasource => datasource
+                        .Ajax()
+                        .PageSize(10)
+                        .ServerOperation(false)
+                        .Model(model => model.Id(user => user.UniqueID))
+                        .Read(read => read.Action("EditingPopup_Read", "Billing"))
+                        )
+                        )
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Edit Bill</h4>
+            </div>
+
+            <div class="col-sm-12" style="background-color: #fff;">
+                <div id="EditBillContainer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

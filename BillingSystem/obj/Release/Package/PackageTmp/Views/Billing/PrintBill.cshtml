@@ -1,0 +1,15 @@
+﻿@model BillingSystem.Models.BillingModels
+@{
+    ViewBag.Title = "PrintBill";
+}
+<script src="~/assets/js/jquery-1.11.3.min.js"></script>
+<script>
+    $(function () {
+        debugger;
+        $.post('@Url.Action("loadBillTextDetailsPartial", "Billing")', { UniqueID: "@Model.UniqueID" }, function (data) {
+            $(".BillContainer").html(data);
+        });
+    });
+
+</script>
+<div class="BillContainer"></div>

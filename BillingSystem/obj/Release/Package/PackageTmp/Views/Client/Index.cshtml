@@ -1,0 +1,207 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .k-grid-content {
+        height: auto !important;
+    }
+
+    #updatePane {
+        overflow-x: scroll;
+    }
+</style>
+<script>
+
+    function PopulateClientDetails() {
+        $.post('@Url.Action("PopulateClientDetails", "Client")', function (data) {
+            $("#ClientGrid").data("kendoGrid").dataSource.data(data);
+        });
+    }
+
+    function AddClientDetails() {
+        $.post('@Url.Action("LoadCreateClientPartialView", "Client")', function (data) {
+            $("#AddClientContainer").html(data);
+            $("#myModalAdd").modal("show");
+        });
+    }
+
+    function UpdateClientDetails() {
+        debugger;
+        var error = Validate("#UpdateClient");
+        if (!error) {
+            $.post('@Url.Action("UpdateClientDetails", "Client")', $("#UpdateClient").serialize(), function (data) {
+                if (data > 0) {
+                    alert("Client is successfully updated.");
+                    PopulateClientDetails();
+                    $("#myModalEdit").modal("toggle");
+                }
+                else if (data == -2) {
+                    alert("Client is already exists.");
+                }
+                else {
+                    alert("Something went wrong!");
+                }
+            });
+
+        }
+        else {
+            return false;
+        }
+    }
+
+    function SubmitClientDetails() {
+        var error = Validate("#AddClient");
+        if (!error) {
+            $.post('@Url.Action("AddClientDetails", "Client")', $("#AddClient").serialize(), function (data) {
+                if (data > 0) {
+                    alert("Client is successfully submitted.");
+                    PopulateClientDetails();
+                    $("#myModalAdd").modal("toggle");
+                }
+                else if (data == -2) {
+                    alert("Client is already exists.");
+                }
+                else {
+                    alert("Something went wrong!");
+                }
+            });
+
+        }
+        else {
+            return false;
+        }
+    }
+
+    function EditRecord(e) {
+        var UniqueID = this.dataItem($(e.currentTarget).closest("tr")).UniqueID;
+        var ClientName = this.dataItem($(e.currentTarget).closest("tr")).ClientName;
+        var BillingAddress = this.dataItem($(e.currentTarget).closest("tr")).BillingAddress;
+        var GSTNumber = this.dataItem($(e.currentTarget).closest("tr")).GSTNumber;
+        var BillingStateCode = this.dataItem($(e.currentTarget).closest("tr")).BillingStateCode;
+        var BillingStateName = this.dataItem($(e.currentTarget).closest("tr")).BillingStateName;
+        var BillingCityName = this.dataItem($(e.currentTarget).closest("tr")).BillingCityName;
+        var BillingPinCode = this.dataItem($(e.currentTarget).closest("tr")).BillingPinCode;
+        var ShippingAddress = this.dataItem($(e.currentTarget).closest("tr")).ShippingAddress;
+        var ShippingStateCode = this.dataItem($(e.currentTarget).closest("tr")).ShippingStateCode;
+        var ShippingStateName = this.dataItem($(e.currentTarget).closest("tr")).ShippingStateName;
+        var ShippingCityName = this.dataItem($(e.currentTarget).closest("tr")).ShippingCityName;
+        var ShippingPinCode = this.dataItem($(e.currentTarget).closest("tr")).ShippingPinCode;
+        $.post('@Url.Action("LoadPartialClientDetailsView", "Client")', {
+            UniqueID: UniqueID, ClientName: ClientName,
+            GSTNumber: GSTNumber, BillingAddress: BillingAddress, BillingStateCode: BillingStateCode, BillingStateName: BillingStateName,
+            BillingCityName: BillingCityName, BillingPinCode: BillingPinCode, ShippingAddress: ShippingAddress, ShippingStateCode: ShippingStateCode,
+            ShippingStateName: ShippingStateName, ShippingCityName: ShippingCityName, ShippingPinCode: ShippingPinCode
+        }, function (data) {
+            $("#EditClientContainer").html(data);
+            $("#myModalEdit").modal("show");
+        });
+    }
+</script>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="#">Home</a>
+        </li>
+
+        @*<li>
+            <a href="#">Manage User(s)
+            </a>
+        </li>*@
+        <li class="active">Manage Client(s)</li>
+    </ul>
+    <!-- /.breadcrumb -->
+
+    @*<div class="nav-search" id="nav-search">
+        <form class="form-search">
+            <span class="input-icon">
+                <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="ace-icon fa fa-search nav-search-icon"></i>
+            </span>
+        </form>
+    </div>*@
+    <!-- /.nav-search -->
+</div>
+<div class="page-content">
+
+    <div class="col-lg-12 padding-t">
+        <div class="form-container">
+            <div class="col-md-12 remove-pad-all">
+                <div class="register-btn">
+                    <input type="button" value="Add New Client" id="btnAdd" class="btn-comn-green" onclick="javascript: AddClientDetails();">
+                </div>
+                <div style="height: 5px;"></div>
+                <div id="updatePane">
+                    @(Html.Kendo().Grid<BillingSystem.Models.ClientModels>()
+                    .Name("ClientGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Command(command => command.Custom("Edit").Click("EditRecord").Text("Edit")).Width(80);
+                        columns.Bound(currentUser => currentUser.ClientName).Width(130);
+                        columns.Bound(currentUser => currentUser.GSTNumber).Width(140);
+                        columns.Bound(currentUser => currentUser.BillingAddress).Width(150);
+                        columns.Bound(currentUser => currentUser.BillingStateCode).Width(150);
+                        columns.Bound(currentUser => currentUser.BillingStateName).Width(150);
+                        columns.Bound(currentUser => currentUser.BillingCityName).Width(150);
+                        columns.Bound(currentUser => currentUser.BillingPinCode).Width(150);
+                        columns.Bound(currentUser => currentUser.ShippingAddress).Width(150);
+                        columns.Bound(currentUser => currentUser.ShippingStateCode).Width(150);
+                        columns.Bound(currentUser => currentUser.ShippingStateName).Width(150);
+                        columns.Bound(currentUser => currentUser.ShippingCityName).Width(150);
+                        columns.Bound(currentUser => currentUser.ShippingPinCode).Width(150);
+                    })
+                            //.ToolBar(toolbar => toolbar.Create())
+                            //.Editable(editable => editable.Mode(GridEditMode.PopUp))
+                    .Pageable(pages => pages.PageSizes(true))
+                    .Sortable()
+                    .Filterable()
+                    .Scrollable()
+                            //.Events(x => x.DataBound("Grid_onRowDataBound"))
+                    .DataSource(datasource => datasource
+                        .Ajax()
+                        .PageSize(10)
+                        .ServerOperation(false)
+                        .Model(model => model.Id(user => user.UniqueID))
+                        .Read(read => read.Action("EditingPopup_Read", "Client"))
+                        )
+                        )
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Edit Client</h4>
+            </div>
+
+            <div class="col-sm-12" style="background-color: #fff;">
+                <div id="EditClientContainer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Add Client</h4>
+            </div>
+
+            <div class="col-sm-12" style="background-color: #fff;">
+                <div id="AddClientContainer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

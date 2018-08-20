@@ -1,0 +1,130 @@
+﻿@model BillingSystem.Models.CompanyModels
+@{
+    Layout = null;
+}
+<script>
+    function fileSelectedChanged(obj) {
+        var filePath = obj.value;
+
+        var ext = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
+        if (ext != 'png' && ext != 'jpg') {
+            alert('Only files with the file extension png or jpg are allowed');
+            $("#FileUpload").val('');
+        } else {
+            //document.getElementById('UpdateCompany').submit();
+        }
+    }
+</script>
+<div class="grid-border-outer">
+    <div class="col-lg-12 padding-t">
+
+        @using (Html.BeginForm("UpdateCompany", "Company", FormMethod.Post, new { id = "UpdateCompany", name = "UpdateCompany", @class = "form-container" }))
+        {
+            <div class="col-sm-12 thumbnail">
+                <div class="col-md-12 remove-pad-all">
+                    @Html.HiddenFor(x => x.UniqueID)
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Company Name : </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(x => x.CompanyName, new { @class = "form-cont requiredField", Title = "Company Name", maxlength = "100", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Company Address : </div>
+                        <div class="col-sm-6">
+                            @Html.TextAreaFor(x => x.CompanyAddress, new { @class = "form-cont requiredField", Title = "Company Address", maxlength = "200", onpaste = "return false", onkeypress = "return blockSpecialCharForAddress(event);" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;GST Number : </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(x => x.GSTNumber, new { @class = "form-cont requiredField", Title = "GST Number", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialChar(event);" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;State Name : </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(x => x.StateName, new { @class = "form-cont requiredField", Title = "State Name", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;City Name : </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(x => x.CityName, new { @class = "form-cont requiredField", Title = "City Name", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Pin Code : </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(x => x.PinCode, new { @class = "form-cont requiredField", Title = "Pin Code", maxlength = "6" , onpaste = "return false", onkeypress = "return blockSpecialChar(event);"})
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Contact No. : </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(x => x.ContactNo, new { @class = "form-cont requiredField", Title = "Contact No", maxlength = "25", onpaste = "return false" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Email ID : </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(x => x.EmailID, new { @class = "form-cont requiredField", Title = "Email ID", maxlength = "100" , onpaste = "return false", onkeypress = "return blockSpecialCharForEmailID(event);"})
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Bank Name : </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(x => x.BankName, new { @class = "form-cont requiredField", Title = "Bank Name", maxlength = "100", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;A/C Number : </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(x => x.AccountNumber, new { @class = "form-cont requiredField", Title = "A/C Number", maxlength = "100", onpaste = "return false", onkeypress = "return blockSpecialChar(event);" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;IFSC Code : </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(x => x.IFSCCode, new { @class = "form-cont requiredField", Title = "IFSC Code", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialChar(event);" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 remove-pad-all"><strong style="color: red">*</strong>&nbsp;Company Logo : </div>
+                        <div class="col-sm-6">
+                            <input type="file" id="FileUpload" class='btn-comn-green' title="Logo" accept="image/png, image/jpeg" onchange="fileSelectedChanged(this);"/>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <br />
+                    <div class="register-btn">
+                    <input type="button" value="Update" id="btnUpdate" class="btn-comn-green" onclick="javascript: UpdateCompanyDetails();">
+                </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

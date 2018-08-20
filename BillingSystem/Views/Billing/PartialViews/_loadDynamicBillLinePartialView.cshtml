@@ -1,0 +1,145 @@
+﻿@model BillingSystem.Models.BillingModels
+@{
+    Layout = null;
+    Int64 rowId = 0;
+}
+<script>
+    function FillAmountContainer(i, input) {
+        debugger;
+        var Quantity = $(input).parent().parent().parent().find("input#BillLines_" + i + "__Quantity").val();
+        var Rate = $(input).parent().parent().parent().find("input#BillLines_" + i + "__Rate").val();
+        $(input).parent().parent().find(".AmountContainer").text(Quantity * Rate);
+    }
+</script>
+<div>
+    <input type="button" class="sbmtbtn color-org" value="Add New Row" onclick="javasscript: AddNewRow();">
+    <br />
+    <br />
+</div>
+<table class="table table-striped table-bordered" id="addtextboxList">
+    <thead>
+        <tr>
+            <th>Description Of Goods</th>
+            <th>Description</th>
+            <th>HSN Code</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>Rate</th>
+            <th>Amount</th>
+            <th style="width: 100px;"></th>
+            @* <th style="border: none; width: 350px;">
+                <input type="button" class="sbmtbtn color-org" value="Add" onclick="javasscript: AddNewRow();">
+            </th>*@
+        </tr>
+    </thead>
+
+    <tbody>
+        @for (int i = 0; i < Model.BillLines.Count; i++)
+        {
+            if (Model.BillLines[i].DescriptionOfGoods == "")
+            {
+                var id = "BillLines_" + i + "__IsActive";
+            <tr class="rolesRowContainer">
+                <td>
+                    @Html.HiddenFor(x => Model.BillLines[i].UniqueID)
+                    <input type="hidden" class="hdnIsDeleted" value="False" name="BillLines[@i].IsActive" id="@id" data-val-required="The IsActive field is required."/>
+                    @Html.TextAreaFor(x => Model.BillLines[i].DescriptionOfGoods, new { @class = "form-cont blankValidation maxLength", Title = "Description Of Goods", maxlength = "100", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                </td>
+                <td>
+                    @Html.TextAreaFor(x => Model.BillLines[i].Description, new { @class = "form-cont blankValidation maxLength", Title = "Description", maxlength = "100", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => Model.BillLines[i].HSNCode, new { @class = "form-cont blankValidation maxLength", Title = "HSN Code", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialChar(event);" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => Model.BillLines[i].Quantity, new { @class = "form-cont blankValidation maxLength", @style = "width:70px;", Title = "Quantity", maxlength = "50", onchange = "javascript:FillAmountContainer(" + @i + ",this);", onpaste = "return false", onkeypress = "return blockSpecialCharForNumeric(event);" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => Model.BillLines[i].Unit, new { @class = "form-cont blankValidation maxLength", @style = "width:70px;", Title = "Unit", maxlength = "50" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => Model.BillLines[i].Rate, new { @class = "form-cont blankValidation maxLength", @style = "width:70px;", Title = "Rate", maxlength = "50", onchange = "javascript:FillAmountContainer(" + @i + ",this);", onpaste = "return false", onkeypress = "return blockSpecialCharForNumeric(event);" })
+                </td>
+                <td class="AmountContainer">0</td>
+                <td></td>
+            </tr>
+            }
+            else
+            {
+                rowId = Model.BillLines.Count - 1;
+                var id = "BillLines_" + i + "__IsActive";
+            <tr class="rolesRowContainer">
+                <td>
+                    @Html.HiddenFor(x => Model.BillLines[i].UniqueID)
+                    @Html.TextAreaFor(x => Model.BillLines[i].DescriptionOfGoods, new { @class = "form-cont blankValidation maxLength", Title = "Description Of Goods", maxlength = "100", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                    <input type="hidden" class="hdnIsDeleted" value="False" name="BillLines[@i].IsActive" id="@id" data-val-required="The IsActive field is required."/>
+                </td>
+                <td>
+                    @Html.TextAreaFor(x => Model.BillLines[i].Description, new { @class = "form-cont blankValidation maxLength", Title = "Description", maxlength = "100", onpaste = "return false", onkeypress = "return blockSpecialCharForName(event);" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => Model.BillLines[i].HSNCode, new { @class = "form-cont blankValidation maxLength", Title = "HSN Code", maxlength = "50", onpaste = "return false", onkeypress = "return blockSpecialChar(event);" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => Model.BillLines[i].Quantity, new { @class = "form-cont blankValidation maxLength", @style = "width:70px;", Title = "Quantity", maxlength = "50", onchange = "javascript:FillAmountContainer(" + @i + ",this);", onpaste = "return false", onkeypress = "return blockSpecialCharForNumeric(event);" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => Model.BillLines[i].Unit, new { @class = "form-cont blankValidation maxLength", @style = "width:70px;", Title = "Unit", maxlength = "50" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => Model.BillLines[i].Rate, new { @class = "form-cont blankValidation maxLength", @style = "width:70px;", Title = "Rate", maxlength = "50", onchange = "javascript:FillAmountContainer(" + @i + ",this);", onpaste = "return false", onkeypress = "return blockSpecialCharForNumeric(event);" })
+                </td>
+                <td class="AmountContainer">
+                    @Convert.ToDecimal(Convert.ToDecimal(Model.BillLines[i].Quantity) * Convert.ToDecimal(Model.BillLines[i].Rate))
+                </td>
+                <td>
+                    @if (i >= 1)
+                    {
+                        <input type="button" class="sbmtbtn color-org" value="Remove" onclick="javascript: RemoveRow(this);">
+                    }
+                </td>
+            </tr>
+            }
+        }
+    </tbody>
+</table>
+<div class="register-btn">
+    <input type="button" value="Create Bill" id="btnAdd" class="btn-comn-green" onclick="javascript: AddBillingDetails();">
+</div>
+<script>
+    var curRow = parseInt("@rowId");
+
+    function AddNewRow() {
+        curRow++;
+        var html = '<tr class="rolesRowContainer"><td>';
+        html += '<textarea name="BillLines[' + curRow + '].DescriptionOfGoods" id="BillLines_' + curRow + '__DescriptionOfGoods" class="form-cont blankValidation maxLength" title="Description Of Goods" maxlength="100" onpaste = "return false"  onkeypress = "return blockSpecialCharForName(event);"></textarea>';
+        html += '<input type="hidden" class="hdnIsDeleted" value="False" name="BillLines[' + curRow + '].IsActive" id="BillLines_' + curRow + '__IsActive" data-val-required="The IsActive field is required."/></td>';
+        html += '<td>';
+        html += '<textarea name="BillLines[' + curRow + '].Description" id="BillLines_' + curRow + '__Description" class="form-cont blankValidation maxLength" title="Description" maxlength="100" onpaste = "return false"  onkeypress = "return blockSpecialCharForName(event);"></textarea>';
+        html += '</td>';
+        html += '<td>';
+        html += '<input type="text" name="BillLines[' + curRow + '].HSNCode" id="BillLines_' + curRow + '__HSNCode" class="form-cont blankValidation maxLength" title="HSN Code" maxlength="50" onpaste = "return false"  onkeypress = "return blockSpecialChar(event);"/>';
+        html += '</td>';
+        html += '<td>';
+        html += '<input type="text" value="0" name="BillLines[' + curRow + '].Quantity" id="BillLines_' + curRow + '__Quantity" style="width:70px;" class="form-cont blankValidation maxLength" title="Quantity" maxlength="50" onchange = "javascript:FillAmountContainer(' + curRow + ',this);" onpaste = "return false"  onkeypress = "return blockSpecialCharForNumeric(event);"/>';
+        html += '</td>';
+        html += '<td>';
+        html += '<input type="text" name="BillLines[' + curRow + '].Unit" id="BillLines_' + curRow + '__Unit" style="width:70px;" class="form-cont blankValidation maxLength" title="Unit" maxlength="50" onpaste = "return false"  onkeypress = "return blockSpecialChar(event);"/>';
+        html += '</td>';
+        html += '<td>';
+        html += '<input type="text" value="0" name="BillLines[' + curRow + '].Rate" id="BillLines_' + curRow + '__Rate" style="width:70px;" class="form-cont blankValidation maxLength" title="Rate" maxlength="50" onchange = "javascript:FillAmountContainer(' + curRow + ',this);" onpaste = "return false"  onkeypress = "return blockSpecialCharForNumeric(event);" />';
+        html += '</td>';
+        html += '<td class="AmountContainer">0';
+        //html += '<input type="text" name="BillLines[' + curRow + '].Quantity" id="BillLines_' + curRow + '__Quantity" class="form-cont  maxLength" title="Quantity" maxlength="50"/>';
+        html += '</td>';
+        html += '<td><input type="button" class="sbmtbtn color-org" value="Remove" onclick="javascript: RemoveRow(this);" ></td>';
+        //html += '<td class="contactError"></td></tr>';
+        $("#addtextboxList").append(html);
+    }
+
+    function RemoveRow(e) {
+        var tr = $(e).parent("td").parent("tr");
+        $(tr).find(".hdnIsDeleted").val(true);
+        $(tr).hide();
+    }
+</script>
