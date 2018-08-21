@@ -20,6 +20,8 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <Use64BitIISExpress />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -1764,10 +1766,12 @@
     <Content Include="Views\Billing\PartialViews\_viewBillDetailsForPrint.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\PublishProfiles\BillingSystemDep.pubxml" />
     <Content Include="Views\User\PartialViews\_loadAddUserDetailView.cshtml" />
     <Content Include="Views\User\PartialViews\_loadEditUserDetailView.cshtml" />
     <Content Include="Views\Billing\PartialViews\_editBilling.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

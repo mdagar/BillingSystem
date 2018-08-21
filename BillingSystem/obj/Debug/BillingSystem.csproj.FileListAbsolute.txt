@@ -51,3 +51,33 @@ D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\obj\Debug\B
 D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\obj\Debug\BillingSystem.csproj.CoreCompileInputs.cache
 D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\obj\Debug\BillingSystem.dll
 D:\Projects\Other Projects\BillingSystem\BillingSystem\BillingSystem\obj\Debug\BillingSystem.pdb
+D:\Projects\BillingSystem\BillingSystem\bin\BillingSystem.dll.config
+D:\Projects\BillingSystem\BillingSystem\bin\BillingSystem.dll
+D:\Projects\BillingSystem\BillingSystem\bin\BillingSystem.pdb
+D:\Projects\BillingSystem\BillingSystem\bin\Microsoft.Web.Infrastructure.dll
+D:\Projects\BillingSystem\BillingSystem\bin\Newtonsoft.Json.dll
+D:\Projects\BillingSystem\BillingSystem\bin\System.Net.Http.Formatting.dll
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.Helpers.dll
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.Http.dll
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.Http.WebHost.dll
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.Mvc.dll
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.Razor.dll
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.WebPages.Deployment.dll
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.WebPages.dll
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.WebPages.Razor.dll
+D:\Projects\BillingSystem\BillingSystem\bin\Newtonsoft.Json.xml
+D:\Projects\BillingSystem\BillingSystem\bin\System.Net.Http.Formatting.xml
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.Helpers.xml
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.Http.xml
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.Http.WebHost.xml
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.Mvc.xml
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.Razor.xml
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.WebPages.xml
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.WebPages.Deployment.xml
+D:\Projects\BillingSystem\BillingSystem\bin\System.Web.WebPages.Razor.xml
+D:\Projects\BillingSystem\BillingSystem\obj\Debug\BillingSystem.csprojResolveAssemblyReference.cache
+D:\Projects\BillingSystem\BillingSystem\obj\Debug\BillingSystem.Resources.Procedures.resources
+D:\Projects\BillingSystem\BillingSystem\obj\Debug\BillingSystem.csproj.GenerateResource.Cache
+D:\Projects\BillingSystem\BillingSystem\obj\Debug\BillingSystem.csproj.CoreCompileInputs.cache
+D:\Projects\BillingSystem\BillingSystem\obj\Debug\BillingSystem.dll
+D:\Projects\BillingSystem\BillingSystem\obj\Debug\BillingSystem.pdb
